@@ -38,7 +38,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	...config,
 	name: envConfig.appName,
 	slug: "expo-template",
-	version: "0.0.0",
+	version: "0.0.1",
 	scheme: envConfig.scheme,
 	web: {
 		bundler: "metro",

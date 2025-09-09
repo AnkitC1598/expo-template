@@ -1,13 +1,31 @@
-{
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "jsx": "react-jsx",
 
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["./*"]
-    }
-  },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+{
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"strict": true,
+		"paths": {
+			"@/ui/*": [
+				"./src/components/ui/*"
+			],
+			"@/atoms/*": [
+				"./src/components/atoms/*"
+			],
+			"@/molecules/*": [
+				"./src/components/molecules/*"
+			],
+			"@/organisms/*": [
+				"./src/components/organisms/*"
+			],
+			"@/*": [
+				"./src/*"
+			]
+		}
+	},
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		".expo/types/**/*.ts",
+		"expo-env.d.ts",
+		"nativewind-env.d.ts"
+	]
 }

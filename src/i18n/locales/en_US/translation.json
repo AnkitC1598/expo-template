@@ -1,0 +1,9 @@
+{
+	"langScreen": {
+		"begin": "Begin Learning",
+		"setAppLangLabel": "Set app language",
+		"setDefaultLearningLangLabel": "Default learning language",
+		"subTitle": "Learn and interact in your desired language",
+		"title": "Set language"
+	}
+}

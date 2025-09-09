@@ -1,49 +1,43 @@
-import { LANGS } from "@/constants/lang";
-import Storage from "@/services/storage";
-import useAppStore from "@/store";
-import { Sheet, useSheetRef } from "@/ui/sheet";
-import { BottomSheetFlatList, BottomSheetView } from "@gorhom/bottom-sheet";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import {
-	Platform,
-	Pressable,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import { CheckIcon } from "react-native-heroicons/solid";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LANGS } from "@/constants/lang"
+import Storage from "@/services/storage"
+import useAppStore from "@/store"
+import { Sheet, useSheetRef } from "@/ui/sheet"
+import { BottomSheetFlatList, BottomSheetView } from "@gorhom/bottom-sheet"
+import React from "react"
+import { useTranslation } from "react-i18next"
+import { Platform, Pressable, Text, TouchableOpacity, View } from "react-native"
+import { CheckIcon } from "react-native-heroicons/solid"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 interface LangControlSheetProps {
-	trigger?: any;
-	type: "app" | "content";
+	trigger?: any
+	type: "app" | "content"
 }
 
 const LangControlSheet = ({ trigger, type = "app" }: LangControlSheetProps) => {
-	const { i18n, t } = useTranslation();
+	const { i18n, t } = useTranslation()
 
-	const inset = useSafeAreaInsets();
-	const bottomSheetModalRef = useSheetRef();
+	const inset = useSafeAreaInsets()
+	const bottomSheetModalRef = useSheetRef()
 
-	const selectedLang = useAppStore((store) => store.lang[type]);
-	const dispatch = useAppStore((store) => store.dispatch);
+	const selectedLang = useAppStore(store => store.lang[type])
+	const dispatch = useAppStore(store => store.dispatch)
 
 	const onPress = (lang: string) => {
-		dispatch({ type: "SET_LANG", payload: { [type]: lang } });
-		Storage.setItem(`${type}Lang`, lang);
+		dispatch({ type: "SET_LANG", payload: { [type]: lang } })
+		Storage.setItem(`${type}Lang`, lang)
 		if (type === "app") {
-			i18n.changeLanguage(lang);
+			i18n.changeLanguage(lang)
 		}
-		bottomSheetModalRef.current?.dismiss();
-	};
+		bottomSheetModalRef.current?.dismiss()
+	}
 
 	const _renderItem = ({
 		item: lang,
 	}: {
-		item: { name: string; langCode: string; locale: string };
+		item: { name: string; langCode: string; locale: string }
 	}) => {
-		const isSelected = selectedLang === lang.locale;
+		const isSelected = selectedLang === lang.locale
 
 		return (
 			<Pressable
@@ -58,8 +52,8 @@ const LangControlSheet = ({ trigger, type = "app" }: LangControlSheetProps) => {
 				)}
 				<Text>{lang.name}</Text>
 			</Pressable>
-		);
-	};
+		)
+	}
 
 	return (
 		<>
@@ -87,19 +81,23 @@ const LangControlSheet = ({ trigger, type = "app" }: LangControlSheetProps) => {
 						gap: 16,
 						height: "100%",
 						paddingBottom:
-							inset.bottom + 16 + Platform.select({ web: 90, default: 0 }),
+							inset.bottom +
+							16 +
+							Platform.select({ web: 90, default: 0 }),
 					}}
 				>
-					<Text className="font-semibold text-xl">{t("langScreen.title")}</Text>
+					<Text className="font-semibold text-xl">
+						{t("langScreen.title")}
+					</Text>
 					<BottomSheetFlatList
 						data={LANGS}
-						keyExtractor={(item) => item.langCode}
+						keyExtractor={item => item.langCode}
 						renderItem={_renderItem}
 					/>
 				</BottomSheetView>
 			</Sheet>
 		</>
-	);
-};
+	)
+}
 
-export default LangControlSheet;
+export default LangControlSheet

@@ -1,11 +1,11 @@
-import { isRunningInExpoGo } from "expo";
-import Constants from "expo-constants";
-import { Platform } from "react-native";
+import { isRunningInExpoGo } from "expo"
+import Constants from "expo-constants"
+import { Platform } from "react-native"
 
-export const DEBUG_ENABLED = ["preview", "dev"].some((env) => {
-	const scheme = Constants?.expoConfig?.scheme;
-	return typeof scheme === "string" && scheme.includes(env);
-});
+export const DEBUG_ENABLED = ["preview", "dev"].some(env => {
+	const scheme = Constants?.expoConfig?.scheme
+	return typeof scheme === "string" && scheme.includes(env)
+})
 
 export const ENV = isRunningInExpoGo()
 	? "expo-go"
@@ -13,7 +13,7 @@ export const ENV = isRunningInExpoGo()
 		? Constants.expoConfig.scheme.includes("-")
 			? Constants.expoConfig.scheme.replace("expo-template-", "")
 			: "production"
-		: "unknown";
+		: "unknown"
 
 export const APP_INFO = {
 	version: Constants.expoConfig?.version ?? "0.0.0",
@@ -24,4 +24,4 @@ export const APP_INFO = {
 		ios: Constants.expoConfig?.ios?.bundleIdentifier ?? "app.expo.template",
 		default: "app.expo.template",
 	}),
-};
+}

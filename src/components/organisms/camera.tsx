@@ -475,7 +475,7 @@ const CameraScreen = ({
 									]
 								}
 								className={cn(
-									"items-center justify-center rounded-full "
+									"items-center justify-center rounded-full"
 								)}
 								style={{
 									padding: isRecording ? 16 : 24,

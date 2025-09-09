@@ -2,7 +2,7 @@ import type {
 	AppStoreState,
 	NavigationStoreState,
 	NotificationStoreState,
-} from "@/types/store";
+} from "@/types/store"
 
 export const initialAppState: AppStoreState = {
 	user: null,
@@ -18,7 +18,7 @@ export const initialAppState: AppStoreState = {
 		app: null,
 		content: null,
 	},
-};
+}
 
 export const initialNotificationStore: NotificationStoreState = {
 	deviceId: null,
@@ -26,6 +26,6 @@ export const initialNotificationStore: NotificationStoreState = {
 	notification: null,
 	response: null,
 	error: null,
-};
+}
 
-export const initialNavigationState: NavigationStoreState = {};
+export const initialNavigationState: NavigationStoreState = {}

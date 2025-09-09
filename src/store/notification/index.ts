@@ -1,13 +1,8 @@
-import { initialNotificationStore } from "@/constants/store";
-import Storage from "@/services/storage";
-import { create } from "zustand";
-import {
-	createJSONStorage,
-	devtools,
-	persist,
-	redux,
-} from "zustand/middleware";
-import { reducer } from "./reducer";
+import { initialNotificationStore } from "@/constants/store"
+import Storage from "@/services/storage"
+import { create } from "zustand"
+import { createJSONStorage, devtools, persist, redux } from "zustand/middleware"
+import { reducer } from "./reducer"
 
 const useNotificationStore = create(
 	devtools(
@@ -17,8 +12,8 @@ const useNotificationStore = create(
 		}),
 		{
 			name: "NotificationStore",
-		},
-	),
-);
+		}
+	)
+)
 
-export default useNotificationStore;
+export default useNotificationStore

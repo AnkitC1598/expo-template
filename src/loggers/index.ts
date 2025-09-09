@@ -1,46 +1,46 @@
-import * as Device from "expo-device";
+import * as Device from "expo-device"
 
 declare global {
 	interface Console {
-		json(obj: unknown): void;
+		json(obj: unknown): void
 	}
 }
 
 export const initLogger = async () => {
 	// If not in development, disable console output
 	if (!__DEV__) {
-		console.log = console.warn = console.error = () => {};
-		console.json = () => {};
-		return;
+		console.log = console.warn = console.error = () => {}
+		console.json = () => {}
+		return
 	}
 
-	const deviceType = Device.DeviceType[Device.deviceType!] || "Unknown";
+	const deviceType = Device.DeviceType[Device.deviceType!] || "Unknown"
 
 	const parts = [Device.manufacturer, Device.modelName]
 		.filter(Boolean)
-		.join("-");
+		.join("-")
 
 	const tag = Device.isDevice
 		? `[${deviceType}${parts ? ` ${parts}` : ""}]`
-		: `[Simulator${parts ? ` ${parts}` : ""}]`;
+		: `[Simulator${parts ? ` ${parts}` : ""}]`
 
 	const tagify =
 		(original: (...args: unknown[]) => void) =>
 		(...args: unknown[]) =>
-			args.includes(tag) ? original(...args) : original(tag, ...args);
+			args.includes(tag) ? original(...args) : original(tag, ...args)
 
-	console.log = tagify(console.log);
-	console.warn = tagify(console.warn);
-	console.error = tagify(console.error);
+	console.log = tagify(console.log)
+	console.warn = tagify(console.warn)
+	console.error = tagify(console.error)
 
 	console.json = (obj: unknown) => {
 		try {
-			console.log(JSON.stringify(obj, null, 4));
+			console.log(JSON.stringify(obj, null, 4))
 		} catch {
-			console.error(tag, "console.json failed to stringify value");
+			console.error(tag, "console.json failed to stringify value")
 		}
-	};
-};
+	}
+}
 
 // ANSI color/style codes
 const ANSI = {
@@ -73,13 +73,13 @@ const ANSI = {
 	bgMagenta: "\x1b[45m",
 	bgCyan: "\x1b[46m",
 	bgWhite: "\x1b[47m",
-};
+}
 
 // Function to wrap text with ANSI codes
 const colorize =
 	(open: string, close: string = ANSI.reset) =>
 	(text: unknown) =>
-		`${open}${String(text)}${close}`;
+		`${open}${String(text)}${close}`
 
 // Core color/styling functions
 const baseColors = {
@@ -110,25 +110,25 @@ const baseColors = {
 	bgMagenta: colorize(ANSI.bgMagenta),
 	bgCyan: colorize(ANSI.bgCyan),
 	bgWhite: colorize(ANSI.bgWhite),
-};
+}
 
-export type LogColorizer = (text: unknown) => string & typeof baseColors;
+export type LogColorizer = (text: unknown) => string & typeof baseColors
 
 export const logColor = Object.keys(baseColors).reduce(
 	(acc, key) => {
-		const fn = baseColors[key as keyof typeof baseColors];
-		const wrapper = (text: unknown) => fn(text);
+		const fn = baseColors[key as keyof typeof baseColors]
+		const wrapper = (text: unknown) => fn(text)
 
 		// Attach other styles as properties
 		Object.entries(baseColors).forEach(([styleKey, styleFn]) => {
 			Object.defineProperty(wrapper, styleKey, {
 				value: (text: unknown) => styleFn(fn(text)),
 				enumerable: false,
-			});
-		});
+			})
+		})
 
-		acc[key as keyof typeof baseColors] = wrapper as LogColorizer;
-		return acc;
+		acc[key as keyof typeof baseColors] = wrapper as LogColorizer
+		return acc
 	},
-	{} as { [K in keyof typeof baseColors]: LogColorizer },
-);
+	{} as { [K in keyof typeof baseColors]: LogColorizer }
+)

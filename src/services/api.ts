@@ -1,15 +1,15 @@
-import AxiosManager, { type CreateInstanceConfig } from "@/managers/axios";
+import AxiosManager, { type CreateInstanceConfig } from "@/managers/axios"
 
 // Define the configuration interface for instance configurations
 interface InstanceConfiguration {
-	suffix: string;
+	suffix: string
 	options: {
-		type?: "basic" | "token";
-	};
+		type?: "basic" | "token"
+	}
 }
 
 // Define the type for the API instances object
-type ApiInstances = Record<string, ReturnType<AxiosManager["getInstance"]>>;
+type ApiInstances = Record<string, ReturnType<AxiosManager["getInstance"]>>
 
 // Instance configurations
 const INSTANCE_CONFIGURATIONS: InstanceConfiguration[] = [
@@ -29,7 +29,7 @@ const INSTANCE_CONFIGURATIONS: InstanceConfiguration[] = [
 		suffix: "WithoutToken",
 		options: {},
 	},
-];
+]
 
 // const accessPath = process.env.EXPO_PUBLIC_ACCESS_PATH
 
@@ -45,7 +45,7 @@ const INSTANCE_CONFIGURATIONS: InstanceConfiguration[] = [
 // }
 
 // Create an AxiosManager instance
-const axiosManager = new AxiosManager();
+const axiosManager = new AxiosManager()
 
 // Define instance types with their configurations
 const instanceTypes: CreateInstanceConfig[] = [
@@ -63,22 +63,22 @@ const instanceTypes: CreateInstanceConfig[] = [
 	// 	accessPath,
 	// 	timeout: Number(process.env.EXPO_PUBLIC_AXIOS_TIMEOUT) || 5000,
 	// },
-];
+]
 
 // Create API instances
-const apiInstances: ApiInstances = {};
+const apiInstances: ApiInstances = {}
 
-instanceTypes.forEach((instanceType) => {
-	axiosManager.createInstance(instanceType);
+instanceTypes.forEach(instanceType => {
+	axiosManager.createInstance(instanceType)
 
 	INSTANCE_CONFIGURATIONS.forEach(({ suffix, options }) => {
-		const instanceName = `${instanceType.name}${suffix}`;
+		const instanceName = `${instanceType.name}${suffix}`
 		apiInstances[instanceName] = axiosManager.getInstance(
 			instanceType.name,
-			options,
-		);
-	});
-});
+			options
+		)
+	})
+})
 
 export const {
 	// client
@@ -90,4 +90,4 @@ export const {
 	// adminWithToken,
 	// adminWithBasicToken,
 	// adminWithoutToken,
-} = apiInstances;
+} = apiInstances

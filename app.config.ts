@@ -1,15 +1,15 @@
-import type { ConfigContext, ExpoConfig } from "expo/config";
+import type { ConfigContext, ExpoConfig } from "expo/config"
 
-const IS_DEV = process.env.APP_VARIANT === "development";
-const IS_DEV_SERVER = process.env.APP_VARIANT === "development-server";
-const IS_PREVIEW = process.env.APP_VARIANT === "preview";
+const IS_DEV = process.env.APP_VARIANT === "development"
+const IS_DEV_SERVER = process.env.APP_VARIANT === "development-server"
+const IS_PREVIEW = process.env.APP_VARIANT === "preview"
 const ENV = IS_DEV
 	? "dev"
 	: IS_DEV_SERVER
 		? "devServer"
 		: IS_PREVIEW
 			? "preview"
-			: "prod";
+			: "prod"
 
 const envConfig = {
 	devServer: {
@@ -32,7 +32,7 @@ const envConfig = {
 		scheme: "expo-template",
 		identifier: "app.expo.template",
 	},
-}[ENV];
+}[ENV]
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
 	...config,
@@ -67,7 +67,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			"expo-camera",
 			{
 				cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
-				microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone",
+				microphonePermission:
+					"Allow $(PRODUCT_NAME) to access your microphone",
 				recordAudioAndroid: true,
 			},
 		],
@@ -130,4 +131,4 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	runtimeVersion: {
 		policy: "appVersion",
 	},
-});
+})

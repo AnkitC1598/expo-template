@@ -1,142 +1,144 @@
 // storage.ts
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { KeyValuePair } from "@react-native-async-storage/async-storage/lib/typescript/types";
-import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import type { KeyValuePair } from "@react-native-async-storage/async-storage/lib/typescript/types"
+import { Platform } from "react-native"
 
-const isWeb = Platform.OS === "web";
+const isWeb = Platform.OS === "web"
 const hasLocalStorage =
-	typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+	typeof window !== "undefined" && typeof window.localStorage !== "undefined"
 
 const Storage = {
 	async getItem(key: string): Promise<string | null> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return null;
+				return null
 			}
 			try {
-				return Promise.resolve(localStorage.getItem(key));
+				return Promise.resolve(localStorage.getItem(key))
 			} catch (error) {
-				console.error(`localStorage.getItem error [${key}]`, error);
-				return null;
+				console.error(`localStorage.getItem error [${key}]`, error)
+				return null
 			}
 		}
-		return AsyncStorage.getItem(key);
+		return AsyncStorage.getItem(key)
 	},
 
 	async setItem(key: string, value: string): Promise<void> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return;
+				return
 			}
 			try {
-				localStorage.setItem(key, value);
-				return Promise.resolve();
+				localStorage.setItem(key, value)
+				return Promise.resolve()
 			} catch (error) {
-				console.error(`localStorage.setItem error [${key}]`, error);
-				return Promise.reject(error);
+				console.error(`localStorage.setItem error [${key}]`, error)
+				return Promise.reject(error)
 			}
 		}
-		return AsyncStorage.setItem(key, value);
+		return AsyncStorage.setItem(key, value)
 	},
 
 	async removeItem(key: string): Promise<void> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return;
+				return
 			}
 			try {
-				localStorage.removeItem(key);
-				return Promise.resolve();
+				localStorage.removeItem(key)
+				return Promise.resolve()
 			} catch (error) {
-				console.error(`localStorage.removeItem error [${key}]`, error);
-				return Promise.reject(error);
+				console.error(`localStorage.removeItem error [${key}]`, error)
+				return Promise.reject(error)
 			}
 		}
-		return AsyncStorage.removeItem(key);
+		return AsyncStorage.removeItem(key)
 	},
 
 	async clear(): Promise<void> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return;
+				return
 			}
 			try {
-				localStorage.clear();
-				return Promise.resolve();
+				localStorage.clear()
+				return Promise.resolve()
 			} catch (error) {
-				console.error("localStorage.clear error", error);
-				return Promise.reject(error);
+				console.error("localStorage.clear error", error)
+				return Promise.reject(error)
 			}
 		}
-		return AsyncStorage.clear();
+		return AsyncStorage.clear()
 	},
 
 	async getAllKeys(): Promise<readonly string[]> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return [];
+				return []
 			}
 			try {
-				const keys: readonly string[] = Object.keys(localStorage);
-				return Promise.resolve(keys);
+				const keys: readonly string[] = Object.keys(localStorage)
+				return Promise.resolve(keys)
 			} catch (error) {
-				console.error("localStorage.getAllKeys error", error);
-				return [];
+				console.error("localStorage.getAllKeys error", error)
+				return []
 			}
 		}
-		return AsyncStorage.getAllKeys();
+		return AsyncStorage.getAllKeys()
 	},
 
 	async multiRemove(keys: string[]): Promise<void> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return;
+				return
 			}
 			try {
-				keys.forEach((key) => localStorage.removeItem(key));
-				return Promise.resolve();
+				keys.forEach(key => localStorage.removeItem(key))
+				return Promise.resolve()
 			} catch (error) {
-				console.error("localStorage.multiRemove error", error);
-				return Promise.reject(error);
+				console.error("localStorage.multiRemove error", error)
+				return Promise.reject(error)
 			}
 		}
-		return AsyncStorage.multiRemove(keys);
+		return AsyncStorage.multiRemove(keys)
 	},
 
 	async multiSet(pairs: [string, string][]): Promise<void> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return;
+				return
 			}
 			try {
-				pairs.forEach(([key, value]) => localStorage.setItem(key, value));
-				return Promise.resolve();
+				pairs.forEach(([key, value]) =>
+					localStorage.setItem(key, value)
+				)
+				return Promise.resolve()
 			} catch (error) {
-				console.error("localStorage.multiSet error", error);
-				return Promise.reject(error);
+				console.error("localStorage.multiSet error", error)
+				return Promise.reject(error)
 			}
 		}
-		return AsyncStorage.multiSet(pairs);
+		return AsyncStorage.multiSet(pairs)
 	},
 
 	async multiGet(keys: readonly string[]): Promise<readonly KeyValuePair[]> {
 		if (isWeb) {
 			if (!hasLocalStorage) {
-				return [];
+				return []
 			}
 			try {
-				const results: readonly KeyValuePair[] = keys.map((key) => [
+				const results: readonly KeyValuePair[] = keys.map(key => [
 					key,
 					localStorage.getItem(key),
-				]);
-				return Promise.resolve(results);
+				])
+				return Promise.resolve(results)
 			} catch (error) {
-				console.error("localStorage.multiGet error", error);
-				return [];
+				console.error("localStorage.multiGet error", error)
+				return []
 			}
 		}
-		return AsyncStorage.multiGet(keys);
+		return AsyncStorage.multiGet(keys)
 	},
-};
+}
 
-export default Storage;
+export default Storage

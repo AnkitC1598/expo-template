@@ -1,45 +1,45 @@
-import { blurhash } from "@/constants/image";
-import { cn } from "@/lib/utils";
+import { blurhash } from "@/constants/image"
+import { cn } from "@/lib/utils"
 import {
 	Image as ExpoImage,
 	type ImageProps as ExpoImageProps,
 	type ImageSource,
 	useImage,
-} from "expo-image";
-import type React from "react";
-import { useEffect, useState } from "react";
-import { Platform, Image as RNImage, View, type ViewProps } from "react-native";
+} from "expo-image"
+import type React from "react"
+import { useEffect, useState } from "react"
+import { Platform, Image as RNImage, View, type ViewProps } from "react-native"
 
 export interface ImageProps extends ExpoImageProps {
-	source?: ImageSource | number | string;
-	grayScale?: boolean | number;
-	withAspectRatio?: boolean;
-	withBlurhash?: boolean;
-	className?: string;
-	children?: React.ReactNode;
-	imageStyle?: ExpoImageProps["style"];
-	containerStyle?: ViewProps["style"];
-	webImageStyle?: React.CSSProperties;
+	source?: ImageSource | number | string
+	grayScale?: boolean | number
+	withAspectRatio?: boolean
+	withBlurhash?: boolean
+	className?: string
+	children?: React.ReactNode
+	imageStyle?: ExpoImageProps["style"]
+	containerStyle?: ViewProps["style"]
+	webImageStyle?: React.CSSProperties
 }
 
 const Image = (props: ImageProps) => {
 	if (!props.source) {
-		return <FallbackImage />;
+		return <FallbackImage />
 	}
 
 	if (typeof props.source === "number") {
-		const image = RNImage.resolveAssetSource(props.source);
-		return <NativeImage {...props} source={image} />;
+		const image = RNImage.resolveAssetSource(props.source)
+		return <NativeImage {...props} source={image} />
 	}
 
 	if (Platform.OS === "web") {
-		return <WebImage {...props} />;
+		return <WebImage {...props} />
 	}
 
-	return <NativeImage {...props} />;
-};
+	return <NativeImage {...props} />
+}
 
-export default Image;
+export default Image
 
 const NativeImage = ({
 	source,
@@ -55,7 +55,7 @@ const NativeImage = ({
 	children = null,
 	...props
 }: ImageProps) => {
-	const image = useImage(source as ImageSource);
+	const image = useImage(source as ImageSource)
 
 	const renderImage = () => (
 		<>
@@ -83,7 +83,10 @@ const NativeImage = ({
 							left: 0,
 							width: "100%",
 							height: "100%",
-							opacity: typeof grayScale === "boolean" ? 0.2 : grayScale,
+							opacity:
+								typeof grayScale === "boolean"
+									? 0.2
+									: grayScale,
 						},
 						imageStyle,
 					]}
@@ -93,12 +96,12 @@ const NativeImage = ({
 				/>
 			)}
 		</>
-	);
+	)
 
 	const aspectRatio =
 		withAspectRatio && image?.width && image?.height
 			? image.width / image.height
-			: undefined;
+			: undefined
 
 	return withAspectRatio && aspectRatio ? (
 		<View
@@ -110,8 +113,8 @@ const NativeImage = ({
 		</View>
 	) : (
 		renderImage()
-	);
-};
+	)
+}
 
 const WebImage = ({
 	source,
@@ -123,24 +126,24 @@ const WebImage = ({
 	className = "",
 	children = null,
 }: ImageProps) => {
-	const [aspectRatio, setAspectRatio] = useState<number | null>(null);
+	const [aspectRatio, setAspectRatio] = useState<number | null>(null)
 
 	const uri =
-		typeof source === "string" ? source : (source as ImageSource)?.uri;
+		typeof source === "string" ? source : (source as ImageSource)?.uri
 
 	useEffect(() => {
 		if (!withAspectRatio || !uri || typeof window === "undefined") {
-			return;
+			return
 		}
 
-		const img = new window.Image();
+		const img = new window.Image()
 		img.onload = () => {
 			if (img.width && img.height) {
-				setAspectRatio(img.width / img.height);
+				setAspectRatio(img.width / img.height)
 			}
-		};
-		img.src = uri;
-	}, [uri, withAspectRatio]);
+		}
+		img.src = uri
+	}, [uri, withAspectRatio])
 
 	const style: React.CSSProperties = {
 		width: "100%",
@@ -152,11 +155,11 @@ const WebImage = ({
 				? `grayscale(${typeof grayScale === "number" ? grayScale : 1})`
 				: undefined,
 		...(webImageStyle as React.CSSProperties),
-	};
+	}
 
 	const imgElement = (
 		<img src={uri} alt={alt} style={style} className={className} />
-	);
+	)
 
 	return withAspectRatio && aspectRatio ? (
 		<View
@@ -168,12 +171,12 @@ const WebImage = ({
 		</View>
 	) : (
 		imgElement
-	);
-};
+	)
+}
 
 const FallbackImage = () => {
 	const fallbackUri =
-		"https://lucdn.letsupgrade.net/assets/icon_9021539b17.png";
+		"https://lucdn.letsupgrade.net/assets/icon_9021539b17.png"
 
 	return (
 		<View
@@ -200,5 +203,5 @@ const FallbackImage = () => {
 				)}
 			</View>
 		</View>
-	);
-};
+	)
+}

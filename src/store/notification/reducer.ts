@@ -1,6 +1,6 @@
-import { initialNotificationStore } from "@/constants/store";
-import { NotificationStoreState } from "@/types/store";
-import { produce } from "immer";
+import { initialNotificationStore } from "@/constants/store"
+import { NotificationStoreState } from "@/types/store"
+import { produce } from "immer"
 
 export const reducer = (
 	state: NotificationStoreState,

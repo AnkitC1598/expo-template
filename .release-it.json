@@ -1,0 +1,106 @@
+{
+	"git": {
+		"commit": true,
+		"commitMessage": "chore: release v${version}",
+		"tag": true,
+		"tagName": "v${version}"
+	},
+	"npm": {
+		"publish": false
+	},
+	"github": {
+		"release": true,
+		"releaseName": "v${version}",
+		"tokenRef": "GITHUB_TOKEN"
+	},
+	"plugins": {
+		"@release-it/conventional-changelog": {
+			"infile": "CHANGELOG.md",
+			"header": "# Changelog",
+			"preset": {
+				"name": "conventionalcommits",
+				"types": [
+					{
+						"type": "feat",
+						"section": "✨ Features"
+					},
+					{
+						"type": "fix",
+						"section": "🐛 Bug Fixes"
+					},
+					{
+						"type": "perf",
+						"section": "🚀 Performance Improvements"
+					},
+					{
+						"type": "security",
+						"section": "🔐 Security"
+					},
+					{
+						"type": "deprecate",
+						"section": "☠️ Deprecated"
+					},
+					{
+						"type": "remove",
+						"section": "🗑️ Removed"
+					},
+					{
+						"type": "upgrade",
+						"section": "⬆️ Packages Upgrades"
+					},
+					{
+						"type": "add",
+						"section": "➕ Add"
+					},
+					{
+						"type": "refactor",
+						"section": "♻️ Code Refactoring"
+					},
+					{
+						"type": "update",
+						"section": "🔄 Updates"
+					},
+					{
+						"type": "style",
+						"section": "🎨 Styles"
+					},
+					{
+						"type": "docs",
+						"section": "📚 Documentation"
+					},
+					{
+						"type": "test",
+						"section": "🚨 Tests"
+					},
+					{
+						"type": "build",
+						"section": "🛠 Builds"
+					},
+					{
+						"type": "ci",
+						"section": "⚙️ Continuous Integrations"
+					},
+					{
+						"type": "merge",
+						"section": "🔀 Merge"
+					},
+					{
+						"type": "revert",
+						"section": "⏪ Reverts"
+					},
+					{
+						"type": "wip",
+						"section": "🚧 Work In Progress"
+					},
+					{
+						"type": "chore",
+						"section": "🧹 Chores"
+					}
+				]
+			}
+		}
+	},
+	"hooks": {
+		"after:bump": "node bumpAppVersion.js"
+	}
+}

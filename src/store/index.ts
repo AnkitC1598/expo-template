@@ -1,13 +1,8 @@
-import { initialAppState } from "@/constants/store";
-import Storage from "@/services/storage";
-import { create } from "zustand";
-import {
-	createJSONStorage,
-	devtools,
-	persist,
-	redux,
-} from "zustand/middleware";
-import { reducer } from "./reducer";
+import { initialAppState } from "@/constants/store"
+import Storage from "@/services/storage"
+import { create } from "zustand"
+import { createJSONStorage, devtools, persist, redux } from "zustand/middleware"
+import { reducer } from "./reducer"
 
 const useAppStore = create(
 	devtools(
@@ -17,8 +12,8 @@ const useAppStore = create(
 		}),
 		{
 			name: "AppStore",
-		},
-	),
-);
+		}
+	)
+)
 
-export default useAppStore;
+export default useAppStore

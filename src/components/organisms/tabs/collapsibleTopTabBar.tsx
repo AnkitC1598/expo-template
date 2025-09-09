@@ -1,5 +1,5 @@
-import * as Haptics from "expo-haptics";
-import React, { useCallback, useRef, useState } from "react";
+import * as Haptics from "expo-haptics"
+import React, { useCallback, useRef, useState } from "react"
 import {
 	Dimensions,
 	type LayoutChangeEvent,
@@ -7,7 +7,7 @@ import {
 	Text,
 	TouchableOpacity,
 	View,
-} from "react-native";
+} from "react-native"
 import Animated, {
 	cancelAnimation,
 	clamp,
@@ -25,20 +25,20 @@ import Animated, {
 	useSharedValue,
 	withDelay,
 	withTiming,
-} from "react-native-reanimated";
+} from "react-native-reanimated"
 
-const SPACING = 26;
-const ANIMATION_DURATION = 300;
+const SPACING = 26
+const ANIMATION_DURATION = 300
 
-type HeaderLayout = { [key: number]: LayoutRectangle };
+type HeaderLayout = { [key: number]: LayoutRectangle }
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get("window")
 
 interface TabBarProps {
-	tabNames: string[];
-	activeHeader: SharedValue<number>;
-	variant?: TabIndicatorVariant;
-	onTabPress: (tabName: string) => void;
+	tabNames: string[]
+	activeHeader: SharedValue<number>
+	variant?: TabIndicatorVariant
+	onTabPress: (tabName: string) => void
 }
 
 const TabBar = ({
@@ -47,43 +47,46 @@ const TabBar = ({
 	variant = "pill",
 	onTabPress,
 }: TabBarProps) => {
-	const [isVisible, setIsVisible] = useState(false);
+	const [isVisible, setIsVisible] = useState(false)
 
-	const headerLayout = useRef<HeaderLayout>({});
-	const aRef = useAnimatedRef<Animated.ScrollView>();
+	const headerLayout = useRef<HeaderLayout>({})
+	const aRef = useAnimatedRef<Animated.ScrollView>()
 
-	const animationId = useRef(0);
+	const animationId = useRef(0)
 
-	const scrollToIndex = useCallback(async (index: number, animated = true) => {
-		animationId.current += 1;
-		const currentId = animationId.current;
-		await new Promise((res) => setTimeout(res, ANIMATION_DURATION / 2));
+	const scrollToIndex = useCallback(
+		async (index: number, animated = true) => {
+			animationId.current += 1
+			const currentId = animationId.current
+			await new Promise(res => setTimeout(res, ANIMATION_DURATION / 2))
 
-		if (currentId !== animationId.current) {
-			return;
-		}
-		activeHeader.value = index;
+			if (currentId !== animationId.current) {
+				return
+			}
+			activeHeader.value = index
 
-		runOnUI(scrollTo)(
-			aRef,
-			headerLayout.current[index]!.x +
-				headerLayout.current[index]!.width / 2 -
-				width / 2,
-			0,
-			animated,
-		);
-	}, []);
+			runOnUI(scrollTo)(
+				aRef,
+				headerLayout.current[index]!.x +
+					headerLayout.current[index]!.width / 2 -
+					width / 2,
+				0,
+				animated
+			)
+		},
+		[]
+	)
 
 	useAnimatedReaction(
 		() => activeHeader.value,
 		(newIndex, prevIndex) => {
 			if (newIndex !== prevIndex) {
-				cancelAnimation(activeHeader);
-				runOnJS(scrollToIndex)(newIndex, true);
+				cancelAnimation(activeHeader)
+				runOnJS(scrollToIndex)(newIndex, true)
 			}
 		},
-		[scrollToIndex],
-	);
+		[scrollToIndex]
+	)
 
 	return (
 		<>
@@ -95,7 +98,8 @@ const TabBar = ({
 					contentContainerStyle={{
 						paddingHorizontal: SPACING,
 						paddingBottom:
-							SPACING / 4 + (variant && variant === "pill" ? 8 : 4),
+							SPACING / 4 +
+							(variant && variant === "pill" ? 8 : 4),
 						paddingTop: SPACING / 4,
 						// backgroundColor: "#f00",
 					}}
@@ -108,14 +112,15 @@ const TabBar = ({
 							index={index}
 							activeHeader={activeHeader}
 							onTabPress={onTabPress}
-							onLayout={(event) => {
-								headerLayout.current[index] = event.nativeEvent.layout;
+							onLayout={event => {
+								headerLayout.current[index] =
+									event.nativeEvent.layout
 								if (
 									Object.keys(headerLayout.current).length ===
 										tabNames.length &&
 									!isVisible
 								) {
-									setIsVisible(true);
+									setIsVisible(true)
 								}
 							}}
 						/>
@@ -130,19 +135,19 @@ const TabBar = ({
 				</Animated.ScrollView>
 			</View>
 		</>
-	);
-};
+	)
+}
 
-const MemoizedTabBar = React.memo(TabBar);
+const MemoizedTabBar = React.memo(TabBar)
 
-export default MemoizedTabBar;
+export default MemoizedTabBar
 
 interface TabBarItemProps {
-	tabName: string;
-	index: number;
-	activeHeader: SharedValue<number>;
-	onTabPress: (tabName: string) => void;
-	onLayout: (event: LayoutChangeEvent) => void;
+	tabName: string
+	index: number
+	activeHeader: SharedValue<number>
+	onTabPress: (tabName: string) => void
+	onLayout: (event: LayoutChangeEvent) => void
 }
 
 const TabBarItem = ({
@@ -157,15 +162,15 @@ const TabBarItem = ({
 			key={tabName}
 			onPress={async () => {
 				if (index === activeHeader.value) {
-					return;
+					return
 				}
-				activeHeader.value = index;
-				onTabPress(tabName);
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+				activeHeader.value = index
+				onTabPress(tabName)
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
 
-				await new Promise((res) => {
-					setTimeout(res, ANIMATION_DURATION / 2);
-				});
+				await new Promise(res => {
+					setTimeout(res, ANIMATION_DURATION / 2)
+				})
 			}}
 			style={[
 				{
@@ -180,15 +185,15 @@ const TabBarItem = ({
 				</Text>
 			</View>
 		</TouchableOpacity>
-	);
-};
+	)
+}
 
-type TabIndicatorVariant = "line" | "pill";
+type TabIndicatorVariant = "line" | "pill"
 
 interface TabIndicatorProps {
-	headerLayout: HeaderLayout;
-	activeHeader: SharedValue<number>;
-	variant?: TabIndicatorVariant;
+	headerLayout: HeaderLayout
+	activeHeader: SharedValue<number>
+	variant?: TabIndicatorVariant
 }
 
 const TabIndicator = ({
@@ -196,38 +201,42 @@ const TabIndicator = ({
 	activeHeader,
 	variant,
 }: TabIndicatorProps) => {
-	const anim = useSharedValue(0);
-	const isAnimating = useSharedValue(false);
+	const anim = useSharedValue(0)
+	const isAnimating = useSharedValue(false)
 
 	useAnimatedReaction(
 		() => activeHeader.value,
 		(v, oldV) => {
 			if (typeof oldV !== "number" || isAnimating.value) {
-				return;
+				return
 			}
 
-			isAnimating.value = true;
-			anim.value = 0;
+			isAnimating.value = true
+			anim.value = 0
 			anim.value = withDelay(
 				0,
-				withTiming(v > oldV ? 1 : -1, { duration: ANIMATION_DURATION }, () => {
-					isAnimating.value = false;
-				}),
-			);
+				withTiming(
+					v > oldV ? 1 : -1,
+					{ duration: ANIMATION_DURATION },
+					() => {
+						isAnimating.value = false
+					}
+				)
+			)
 		},
-		[activeHeader],
-	);
+		[activeHeader]
+	)
 
 	const animatedStyle = useAnimatedStyle(() => {
-		const itemLayout = headerLayout[activeHeader.value]!;
-		const width = clamp(itemLayout.width - SPACING, 20, itemLayout.width);
-		const centerX = itemLayout.x + itemLayout.width / 2;
-		const topY = itemLayout.y + itemLayout.height;
+		const itemLayout = headerLayout[activeHeader.value]!
+		const width = clamp(itemLayout.width - SPACING, 20, itemLayout.width)
+		const centerX = itemLayout.x + itemLayout.width / 2
+		const topY = itemLayout.y + itemLayout.height
 
 		switch (variant) {
 			case "pill": {
-				const horizontalPadding = 24;
-				const verticalPadding = 12;
+				const horizontalPadding = 24
+				const verticalPadding = 12
 
 				return {
 					position: "absolute",
@@ -238,27 +247,27 @@ const TabIndicator = ({
 					backgroundColor: interpolateColor(
 						Math.abs(anim.value),
 						[0, 0.3, 0.7, 1],
-						["#e5e5e580", "#d4d4d480", "#d4d4d480", "#e5e5e580"],
+						["#e5e5e580", "#d4d4d480", "#d4d4d480", "#e5e5e580"]
 					),
 					transform: [
 						{
 							scaleX: interpolate(
 								Math.abs(anim.value),
 								[0, 0.95, 1],
-								[1, 1.05, 1],
+								[1, 1.05, 1]
 							),
 						},
 						{
 							scaleY: interpolate(
 								Math.abs(anim.value),
 								[0, 0.95, 1],
-								[1, 0.95, 1],
+								[1, 0.95, 1]
 							),
 						},
 					],
 					borderRadius: 100,
 					zIndex: -1,
-				};
+				}
 			}
 			case "line":
 			default:
@@ -272,27 +281,27 @@ const TabIndicator = ({
 					backgroundColor: interpolateColor(
 						Math.abs(anim.value),
 						[0, 0.3, 0.7, 1],
-						["#333", "#999", "#999", "#333"],
+						["#333", "#999", "#999", "#333"]
 					),
 					transform: [
 						{
 							scaleX: interpolate(
 								Math.abs(anim.value),
 								[0, 0.5, 1],
-								[1, 2.2, 1],
+								[1, 2.2, 1]
 							),
 						},
 						{
 							scaleY: interpolate(
 								Math.abs(anim.value),
 								[0, 0.5, 1],
-								[1, 0.5, 1],
+								[1, 0.5, 1]
 							),
 						},
 					],
-				};
+				}
 		}
-	}, [activeHeader, headerLayout, variant]);
+	}, [activeHeader, headerLayout, variant])
 
 	return (
 		<Animated.View
@@ -300,5 +309,5 @@ const TabIndicator = ({
 			entering={FadeInDown.duration(ANIMATION_DURATION)}
 			style={animatedStyle}
 		/>
-	);
-};
+	)
+}

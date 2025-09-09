@@ -1,12 +1,12 @@
-import type { ViewProps } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import type { ViewProps } from "react-native"
+import Animated, { FadeInUp } from "react-native-reanimated"
 
 const StaggeredView = ({
 	index,
 	children,
 	...props
 }: {
-	index: number;
+	index: number
 } & ViewProps) => {
 	return (
 		<Animated.View
@@ -15,7 +15,7 @@ const StaggeredView = ({
 		>
 			{children}
 		</Animated.View>
-	);
-};
+	)
+}
 
-export default StaggeredView;
+export default StaggeredView

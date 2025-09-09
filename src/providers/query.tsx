@@ -1,23 +1,21 @@
-import Storage from "@/services/storage";
-import { useReactQueryDevTools } from "@dev-plugins/react-query";
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClient, type QueryClientConfig } from "@tanstack/react-query";
+import Storage from "@/services/storage"
+import { useReactQueryDevTools } from "@dev-plugins/react-query"
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister"
+import { QueryClient, type QueryClientConfig } from "@tanstack/react-query"
 import {
 	PersistQueryClientProvider,
 	persistQueryClient,
-} from "@tanstack/react-query-persist-client";
-import { useEffect } from "react";
-import { AppState, type AppStateStatus, Platform } from "react-native";
+} from "@tanstack/react-query-persist-client"
+import { useEffect } from "react"
+import { AppState, type AppStateStatus, Platform } from "react-native"
 
 interface QueryProviderProps {
-	children: React.ReactNode;
-	defaultOptions?: QueryClientConfig["defaultOptions"];
+	children: React.ReactNode
+	defaultOptions?: QueryClientConfig["defaultOptions"]
 }
 
-export let queryClient: QueryClient;
-export let asyncStoragePersister: ReturnType<
-	typeof createAsyncStoragePersister
->;
+export let queryClient: QueryClient
+export let asyncStoragePersister: ReturnType<typeof createAsyncStoragePersister>
 
 const QueryProvider = ({ children, defaultOptions }: QueryProviderProps) => {
 	queryClient = new QueryClient({
@@ -29,11 +27,11 @@ const QueryProvider = ({ children, defaultOptions }: QueryProviderProps) => {
 				...defaultOptions?.queries,
 			},
 		},
-	});
+	})
 
 	asyncStoragePersister = createAsyncStoragePersister({
 		storage: Storage,
-	});
+	})
 
 	useEffect(() => {
 		const handleAppStateChange = (nextAppState: AppStateStatus) => {
@@ -41,20 +39,20 @@ const QueryProvider = ({ children, defaultOptions }: QueryProviderProps) => {
 				const [, persistPromise] = persistQueryClient({
 					persister: asyncStoragePersister,
 					queryClient,
-				});
+				})
 
-				persistPromise.catch((error) => {
-					console.error("Failed to persist React Query cache:", error);
-				});
+				persistPromise.catch(error => {
+					console.error("Failed to persist React Query cache:", error)
+				})
 			}
-		};
+		}
 
 		const subscription = AppState.addEventListener(
 			"change",
-			handleAppStateChange,
-		);
-		return () => subscription.remove();
-	}, []);
+			handleAppStateChange
+		)
+		return () => subscription.remove()
+	}, [])
 
 	return (
 		<>
@@ -67,18 +65,18 @@ const QueryProvider = ({ children, defaultOptions }: QueryProviderProps) => {
 				onSuccess={() => {
 					queryClient
 						.resumePausedMutations()
-						.then(() => queryClient.invalidateQueries());
+						.then(() => queryClient.invalidateQueries())
 				}}
 			>
 				{children}
 			</PersistQueryClientProvider>
 		</>
-	);
-};
+	)
+}
 
-export default QueryProvider;
+export default QueryProvider
 
 const ReactQueryDevTools = ({ queryClient }: { queryClient: QueryClient }) => {
-	useReactQueryDevTools(queryClient);
-	return null;
-};
+	useReactQueryDevTools(queryClient)
+	return null
+}

@@ -53,7 +53,10 @@ const DevTools = () => {
 	const resetPosition = ({
 		x = 0,
 		y = 0,
-	}: { x?: number; y?: number } = {}) => {
+	}: {
+		x?: number
+		y?: number
+	} = {}) => {
 		translationX.value = withTiming(x, { duration: 100 })
 		translationY.value = withTiming(y, { duration: 100 })
 	}

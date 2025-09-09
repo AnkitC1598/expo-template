@@ -3,11 +3,7 @@ import { MotiView } from "moti"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Text, TextProps, View } from "react-native"
 
-const placeholders = ({
-	incrementor = 48,
-}: {
-	incrementor: 48 | 65 | 97
-}) =>
+const placeholders = ({ incrementor = 48 }: { incrementor: 48 | 65 | 97 }) =>
 	[
 		...Array(incrementor === 48 ? 10 : 26).keys(),
 		incrementor !== 48 ? 32 - incrementor : null,

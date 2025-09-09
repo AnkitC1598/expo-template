@@ -1,14 +1,14 @@
-import CountryCodes, { type CountryCode } from "@/constants/countryCodes";
-import { cn } from "@/lib/utils";
-import Button from "@/ui/button";
-import { Sheet, useSheetRef } from "@/ui/sheet";
+import CountryCodes, { type CountryCode } from "@/constants/countryCodes"
+import { cn } from "@/lib/utils"
+import Button from "@/ui/button"
+import { Sheet, useSheetRef } from "@/ui/sheet"
 import {
 	BottomSheetFlatList,
 	BottomSheetTextInput,
 	BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import * as Haptics from "expo-haptics";
-import React from "react";
+} from "@gorhom/bottom-sheet"
+import * as Haptics from "expo-haptics"
+import React from "react"
 import {
 	Keyboard,
 	Platform,
@@ -17,15 +17,15 @@ import {
 	TouchableOpacity,
 	type TouchableOpacityProps,
 	View,
-} from "react-native";
-import { CheckIcon, XCircleIcon } from "react-native-heroicons/solid";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+} from "react-native"
+import { CheckIcon, XCircleIcon } from "react-native-heroicons/solid"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 interface CountrySelectorSheetProps {
-	trigger?: any;
-	value: CountryCode["dial_code"];
-	onChange: (value: CountryCode) => void;
-	triggerProps?: TouchableOpacityProps;
+	trigger?: any
+	value: CountryCode["dial_code"]
+	onChange: (value: CountryCode) => void
+	triggerProps?: TouchableOpacityProps
 }
 
 const CountrySelectorSheet = ({
@@ -34,38 +34,38 @@ const CountrySelectorSheet = ({
 	value,
 	onChange,
 }: CountrySelectorSheetProps) => {
-	const bottomSheetModalRef = useSheetRef();
-	const inset = useSafeAreaInsets();
+	const bottomSheetModalRef = useSheetRef()
+	const inset = useSafeAreaInsets()
 
-	const [query, setQuery] = React.useState("");
+	const [query, setQuery] = React.useState("")
 
 	const filteredCountryCodes = CountryCodes.filter(
-		(code) =>
+		code =>
 			code.dial_code.includes(query) ||
 			code.name.toLowerCase().includes(query.toLowerCase()) ||
-			code.code.toLowerCase().includes(query.toLowerCase()),
-	);
+			code.code.toLowerCase().includes(query.toLowerCase())
+	)
 
 	const onPress = (code: CountryCode) => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		onChange(code);
-		setQuery("");
-		bottomSheetModalRef.current?.dismiss();
-	};
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+		onChange(code)
+		setQuery("")
+		bottomSheetModalRef.current?.dismiss()
+	}
 
 	const closeSheet = () => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		bottomSheetModalRef.current?.dismiss();
-	};
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+		bottomSheetModalRef.current?.dismiss()
+	}
 
 	const _renderItem = ({ item: code }: { item: CountryCode }) => {
-		const isSelected = code.dial_code === value;
+		const isSelected = code.dial_code === value
 		return (
 			<TouchableOpacity
 				key={code.code}
 				className={cn(
 					"mb-2 w-full flex-row items-center gap-4 rounded-xl border bg-neutral-100 p-4",
-					isSelected ? "" : "border-transparent",
+					isSelected ? "" : "border-transparent"
 				)}
 				onPress={onPress.bind(null, code)}
 			>
@@ -80,8 +80,8 @@ const CountrySelectorSheet = ({
 					<View className="h-6 w-6" />
 				)}
 			</TouchableOpacity>
-		);
-	};
+		)
+	}
 
 	return (
 		<>
@@ -92,13 +92,13 @@ const CountrySelectorSheet = ({
 			) : (
 				<TouchableOpacity
 					{...triggerProps}
-					onPress={(e) => {
+					onPress={e => {
 						if (Keyboard.isVisible()) {
-							Keyboard.dismiss();
+							Keyboard.dismiss()
 						}
-						triggerProps?.onPress?.(e);
-						bottomSheetModalRef.current?.present();
-						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+						triggerProps?.onPress?.(e)
+						bottomSheetModalRef.current?.present()
+						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
 					}}
 				>
 					<Text className="">{value}</Text>
@@ -120,7 +120,9 @@ const CountrySelectorSheet = ({
 						gap: 16,
 						height: "100%",
 						paddingBottom:
-							inset.bottom + 16 + Platform.select({ web: 90, default: 0 }),
+							inset.bottom +
+							16 +
+							Platform.select({ web: 90, default: 0 }),
 					}}
 				>
 					<Button
@@ -142,24 +144,26 @@ const CountrySelectorSheet = ({
 					/>
 					<BottomSheetFlatList
 						data={filteredCountryCodes}
-						keyExtractor={(item) => item.code}
+						keyExtractor={item => item.code}
 						renderItem={_renderItem}
 						ListEmptyComponent={
 							<Pressable
 								className="h-full items-center justify-center"
 								onPress={() => {
-									bottomSheetModalRef.current?.snapToIndex(0);
-									Keyboard.dismiss();
+									bottomSheetModalRef.current?.snapToIndex(0)
+									Keyboard.dismiss()
 								}}
 							>
-								<Text className="text-neutral-400">No results found</Text>
+								<Text className="text-neutral-400">
+									No results found
+								</Text>
 							</Pressable>
 						}
 					/>
 				</BottomSheetView>
 			</Sheet>
 		</>
-	);
-};
+	)
+}
 
-export default CountrySelectorSheet;
+export default CountrySelectorSheet

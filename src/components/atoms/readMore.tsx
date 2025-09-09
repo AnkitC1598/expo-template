@@ -1,21 +1,21 @@
-import { cn } from "@/lib/utils";
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { type LayoutChangeEvent, Text, View } from "react-native";
+import { cn } from "@/lib/utils"
+import type React from "react"
+import { useEffect, useRef, useState } from "react"
+import { type LayoutChangeEvent, Text, View } from "react-native"
 import Animated, {
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
-} from "react-native-reanimated";
+} from "react-native-reanimated"
 
 interface ReadMoreProps {
-	numberOfLines: number;
-	text: string;
-	className?: string;
-	alignClass?: string;
-	onReady?: () => void;
-	renderTruncatedFooter?: (handlePress: () => void) => React.ReactNode;
-	renderRevealedFooter?: (handlePress: () => void) => React.ReactNode;
+	numberOfLines: number
+	text: string
+	className?: string
+	alignClass?: string
+	onReady?: () => void
+	renderTruncatedFooter?: (handlePress: () => void) => React.ReactNode
+	renderRevealedFooter?: (handlePress: () => void) => React.ReactNode
 }
 
 const ReadMore: React.FC<ReadMoreProps> = ({
@@ -27,86 +27,86 @@ const ReadMore: React.FC<ReadMoreProps> = ({
 	renderTruncatedFooter,
 	renderRevealedFooter,
 }) => {
-	const [isMeasured, setIsMeasured] = useState(false);
-	const [shouldShowReadMore, setShouldShowReadMore] = useState(false);
-	const [isTextExpanded, setIsTextExpanded] = useState(false);
-	const textComponentRef = useRef<Text>(null);
-	const isComponentMounted = useRef(true);
-	const fullHeight = useRef(0);
+	const [isMeasured, setIsMeasured] = useState(false)
+	const [shouldShowReadMore, setShouldShowReadMore] = useState(false)
+	const [isTextExpanded, setIsTextExpanded] = useState(false)
+	const textComponentRef = useRef<Text>(null)
+	const isComponentMounted = useRef(true)
+	const fullHeight = useRef(0)
 
-	const animatedHeight = useSharedValue(0);
+	const animatedHeight = useSharedValue(0)
 
 	useEffect(() => {
 		const measureText = async () => {
 			if (!isComponentMounted.current) {
-				return;
+				return
 			}
 
 			// Wait for the next frame to ensure the text is rendered
-			await nextFrameAsync();
+			await nextFrameAsync()
 
 			if (!isComponentMounted.current) {
-				return;
+				return
 			}
 
 			// Measure the full height of the text without any numberOfLines restriction
 			const fullHeightValue = await measureHeightAsync(
-				textComponentRef.current!,
-			);
-			fullHeight.current = fullHeightValue;
+				textComponentRef.current!
+			)
+			fullHeight.current = fullHeightValue
 
-			setIsMeasured(true);
+			setIsMeasured(true)
 			// Wait for the next frame to re-render with numberOfLines restriction
-			await nextFrameAsync();
+			await nextFrameAsync()
 
 			if (!isComponentMounted.current) {
-				return;
+				return
 			}
 
 			// Measure the height with numberOfLines restriction
 			const restrictedHeight = await measureHeightAsync(
-				textComponentRef.current!,
-			);
+				textComponentRef.current!
+			)
 
 			if (fullHeight.current > restrictedHeight) {
-				setShouldShowReadMore(true);
+				setShouldShowReadMore(true)
 			} else {
-				setShouldShowReadMore(false);
+				setShouldShowReadMore(false)
 				animatedHeight.value = withTiming(fullHeight.current, {
 					duration: 300,
-				});
+				})
 			}
 
 			if (onReady) {
-				onReady();
+				onReady()
 			}
 
 			animatedHeight.value = withTiming(restrictedHeight, {
 				duration: 300,
-			});
-		};
+			})
+		}
 
-		measureText();
+		measureText()
 
 		return () => {
-			isComponentMounted.current = false;
-		};
-	}, [onReady, animatedHeight]);
+			isComponentMounted.current = false
+		}
+	}, [onReady, animatedHeight])
 
 	const expandText = () => {
-		setIsTextExpanded(true);
-		animatedHeight.value = withTiming(fullHeight.current, { duration: 300 });
-	};
+		setIsTextExpanded(true)
+		animatedHeight.value = withTiming(fullHeight.current, { duration: 300 })
+	}
 
 	const collapseText = () => {
-		setIsTextExpanded(false);
-		animatedHeight.value = withTiming(numberOfLines * 18, { duration: 300 }); // Assuming average 18 px per line height
-	};
+		setIsTextExpanded(false)
+		animatedHeight.value = withTiming(numberOfLines * 18, { duration: 300 }) // Assuming average 18 px per line height
+	}
 
 	const renderReadMoreOrLessButton = () => {
 		if (shouldShowReadMore && !isTextExpanded) {
 			if (renderTruncatedFooter) {
-				return renderTruncatedFooter(expandText);
+				return renderTruncatedFooter(expandText)
 			}
 
 			return (
@@ -116,10 +116,10 @@ const ReadMore: React.FC<ReadMoreProps> = ({
 				>
 					Read more
 				</Text>
-			);
+			)
 		} else if (shouldShowReadMore && isTextExpanded) {
 			if (renderRevealedFooter) {
-				return renderRevealedFooter(collapseText);
+				return renderRevealedFooter(collapseText)
 			}
 
 			return (
@@ -129,15 +129,15 @@ const ReadMore: React.FC<ReadMoreProps> = ({
 				>
 					Read less
 				</Text>
-			);
+			)
 		}
-	};
+	}
 
 	const _animatedStyle = useAnimatedStyle(() => {
 		return {
 			height: animatedHeight.value,
-		};
-	});
+		}
+	})
 
 	// console.log(
 	// 	JSON.stringify(
@@ -161,7 +161,9 @@ const ReadMore: React.FC<ReadMoreProps> = ({
 			<Animated.View style={[{ overflow: "hidden" }]}>
 				<Text
 					numberOfLines={
-						isMeasured && !isTextExpanded ? numberOfLines : undefined
+						isMeasured && !isTextExpanded
+							? numberOfLines
+							: undefined
 					}
 					ref={textComponentRef}
 					onLayout={handleLayoutChange}
@@ -172,24 +174,24 @@ const ReadMore: React.FC<ReadMoreProps> = ({
 			</Animated.View>
 			{renderReadMoreOrLessButton()}
 		</View>
-	);
-};
+	)
+}
 
 const measureHeightAsync = (component: Text) => {
-	return new Promise<number>((resolve) => {
+	return new Promise<number>(resolve => {
 		component.measure((_x, _y, _w, h) => {
-			resolve(h);
-		});
-	});
-};
+			resolve(h)
+		})
+	})
+}
 
 const nextFrameAsync = () => {
-	return new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-};
+	return new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+}
 
 const handleLayoutChange = (event: LayoutChangeEvent) => {
-	const { height } = event.nativeEvent.layout;
-	return height;
-};
+	const { height } = event.nativeEvent.layout
+	return height
+}
 
-export default ReadMore;
+export default ReadMore

@@ -314,7 +314,10 @@ const VideoPlayerComponent = forwardRef(
 const VideoStatus = ({
 	isPlaying,
 	status,
-}: { isPlaying: boolean; status: string }) => {
+}: {
+	isPlaying: boolean
+	status: string
+}) => {
 	return status === "loading" ? (
 		<ActivityIndicator />
 	) : (

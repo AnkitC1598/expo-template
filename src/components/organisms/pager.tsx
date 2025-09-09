@@ -41,10 +41,15 @@ interface PagerViewProps<T = unknown> {
 	onPageScroll?: ({
 		position,
 		offset,
-	}: { position: number; offset: number }) => void
+	}: {
+		position: number
+		offset: number
+	}) => void
 	onPageScrollStateChanged?: ({
 		pageScrollState,
-	}: { pageScrollState: string }) => void
+	}: {
+		pageScrollState: string
+	}) => void
 
 	cumulativeDuration?: boolean
 	pausable?: boolean
